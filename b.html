@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Virtual Football Analyzer</title>
+
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    /* Reset and Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      background: #f4f6f8; 
+      display: flex; 
+      flex-direction: column; 
+      min-height: 100vh;
+      color: #0d1b2a;
+    }
+
+    a { text-decoration: none; }
+
+    /* HEADER */
+    header {
+      background: #0d1b2a;
+      color: #fff;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header h2 { font-size: 22px; font-weight: bold; }
+    .social-header { display: flex; align-items: center; gap: 15px; }
+    .social-header a { color: #fff; font-size: 20px; transition: color 0.3s; }
+    .social-header a:hover { color: #00d4ff; }
+    .social-header span { font-weight: 600; font-size: 14px; margin-right: 10px; }
+
+    /* MAIN CONTENT */
+    main {
+      flex: 1;
+      padding: 30px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    h2, h3 { margin-bottom: 15px; }
+    textarea { 
+      width: 100%; 
+      height: 200px; 
+      padding: 15px; 
+      border-radius: 6px; 
+      border: 1px solid #ccc; 
+      resize: vertical;
+      font-size: 14px;
+    }
+    button { 
+      padding: 10px 20px; 
+      margin: 5px 5px 15px 0; 
+      cursor: pointer; 
+      border: none; 
+      border-radius: 5px; 
+      background-color: #0d1b2a; 
+      color: #fff; 
+      transition: background 0.3s;
+    }
+    button:hover { background-color: #005f99; }
+    select { padding: 8px 12px; margin-right: 10px; border-radius: 5px; border: 1px solid #ccc; }
+
+    .box {
+      margin-top: 20px; 
+      background: #fff; 
+      padding: 20px; 
+      border-radius: 8px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+    .box:hover { transform: translateY(-2px); }
+
+    table { 
+      border-collapse: collapse; 
+      width: 100%; 
+      margin-top: 15px; 
+    }
+    table th, table td { 
+      padding: 10px; 
+      text-align: center; 
+      border-bottom: 1px solid #eee; 
+    }
+    table th { background: #eaeaea; font-weight: 600; }
+
+    /* FOOTER */
+    footer {
+      background: #0d1b2a;
+      color: #fff;
+      padding: 25px 20px;
+      text-align: center;
+    }
+    .social-footer { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-bottom: 15px; }
+    .social-footer a { color: #fff; font-size: 20px; display: flex; flex-direction: column; align-items: center; gap: 5px; transition: color 0.3s; }
+    .social-footer a:hover { color: #00d4ff; }
+    .social-footer span { font-size: 12px; font-weight: 600; }
+    .footer-note { font-size: 14px; color: #ccc; font-style: italic; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .social-header { margin-top: 10px; }
+      header h2 { margin-bottom: 10px; width: 100%; text-align: center; }
+      button, select { width: 100%; margin-bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <h2>⚽ Virtual Football Analyzer</h2>
+  <div class="social-header">
+    <span>Follow DEH EMANUELS</span>
+    <a href="https://www.facebook.com/profile.php?id=100075395107907" target="_blank"><i class="fab fa-facebook"></i></a>
+    <a href="https://wa.me/254704518130" target="_blank"><i class="fab fa-whatsapp"></i></a>
+  </div>
+  <script>
+  atOptions = {
+    'key' : 'b94d6237e5143f6d4135192dae937c52',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/b94d6237e5143f6d4135192dae937c52/invoke.js"></script>
+</header>
+
+<!-- MAIN -->
+<main>
+
+  <h2>Virtual Football Results Analyzer</h2>
+
+  <textarea id="input" placeholder="Paste results (4 lines per match)"></textarea><br>
+
+  <button onclick="addMatches()">Add Matches</button>
+  <button onclick="clearAll()">Clear All</button>
+
+  <div class="box">
+    <b>Total Matches Saved:</b> <span id="count">0</span>
+  </div>
+  <style>
+.ad-center{
+  display:flex;
+  justify-content:center;
+  width:100%;
+}
+.ad-center iframe{
+  margin:0 auto !important;
+}
+</style>
+
+<div class="ad-center">
+  <script>
+    atOptions = {
+      'key' : '527a1ebfec7f234b8aab377075f1dd5e',
+      'format' : 'iframe',
+      'height' : 50,
+      'width' : 320,
+      'params' : {}
+    };
+  </script>
+  <script src="https://www.highperformanceformat.com/527a1ebfec7f234b8aab377075f1dd5e/invoke.js"></script>
+</div>
+
+  <div class="box" id="stats"></div>
+
+  <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ddd;">
+
+  <h3>Compare Two Teams</h3>
+
+  <select id="teamA"></select>
+  <select id="teamB"></select>
+  <button onclick="compare()">Compare</button>
+
+  <div class="box" id="comparison"></div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="social-footer">
+    <span>Follow DEH EMANUELS</span>
+    <a href="https://www.facebook.com/profile.php?id=100075395107907" target="_blank">
+      <i class="fab fa-facebook"></i>
+      <span>Facebook</span>
+    </a>
+    <a href="https://wa.me/254704518130" target="_blank">
+      <i class="fab fa-whatsapp"></i>
+      <span>WhatsApp</span>
+    </a>
+  </div>
+  <div class="footer-note">
+    Connect for daily virtual football predictions and analysis
+  </div>
+  <script>
+  atOptions = {
+    'key' : 'b94d6237e5143f6d4135192dae937c52',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/b94d6237e5143f6d4135192dae937c52/invoke.js"></script>
+</footer>
+
+
+
+<script>
+/* Your full original JS remains exactly the same */
+let matches = JSON.parse(localStorage.getItem("matches")) || [];
+
+updateCount();
+updateStats();
+updateTeams();
+
+function addMatches() {
+  const lines = document.getElementById("input").value
+    .trim()
+    .split("\n")
+    .map(l => l.trim())
+    .filter(l => l !== "");
+
+  let newAdded = 0;
+
+  for (let i = 0; i < lines.length; i += 4) {
+    const home = lines[i];
+    const hg = parseInt(lines[i + 1]);
+    const ag = parseInt(lines[i + 2]);
+    const away = lines[i + 3];
+
+    if (!home || !away || isNaN(hg) || isNaN(ag)) continue;
+
+    // Check for duplicates
+    const exists = matches.some(m => 
+      m.home === home && m.away === away && m.hg === hg && m.ag === ag
+    );
+
+    if (!exists) {
+      matches.push({ home, away, hg, ag });
+      newAdded++;
+    }
+  }
+
+  localStorage.setItem("matches", JSON.stringify(matches));
+  document.getElementById("input").value = "";
+
+  updateCount();
+  updateStats();
+  updateTeams();
+
+  if(newAdded === 0) alert("No new matches were added (duplicates detected).");
+  else alert(`${newAdded} new match(es) added successfully!`);
+}
+
+function clearAll() {
+  if (!confirm("Clear all saved matches?")) return;
+  matches = [];
+  localStorage.removeItem("matches");
+  updateCount();
+  updateStats();
+  updateTeams();
+  document.getElementById("comparison").innerHTML = "";
+}
+
+function updateCount() {
+  document.getElementById("count").textContent = matches.length;
+}
+
+function updateStats() {
+  if (matches.length === 0) {
+    document.getElementById("stats").innerHTML = "";
+    return;
+  }
+
+  let goals = 0, over25 = 0, gg = 0;
+
+  matches.forEach(m => {
+    const total = m.hg + m.ag;
+    goals += total;
+    if (total > 2) over25++;
+    if (m.hg > 0 && m.ag > 0) gg++;
+  });
+
+  document.getElementById("stats").innerHTML = `
+    <h3>Overall Stats</h3>
+    Total Goals: ${goals}<br>
+    Avg Goals: ${(goals / matches.length).toFixed(2)}<br>
+    Over 2.5: ${over25}<br>
+    GG: ${gg}
+  `;
+}
+function updateTeams() {
+  let teams = {};
+
+  matches.forEach(m => {
+    if (!teams[m.home]) teams[m.home] = { s:0, c:0, p:0 };
+    if (!teams[m.away]) teams[m.away] = { s:0, c:0, p:0 };
+
+    teams[m.home].s += m.hg;
+    teams[m.home].c += m.ag;
+    teams[m.home].p++;
+
+    teams[m.away].s += m.ag;
+    teams[m.away].c += m.hg;
+    teams[m.away].p++;
+  });
+
+  const selects = [document.getElementById("teamA"), document.getElementById("teamB")];
+  selects.forEach(sel => {
+    sel.innerHTML = "<option value=''>Select team</option>";
+    
+    // Sort team names alphabetically
+    const sortedTeams = Object.keys(teams).sort((a,b) => a.localeCompare(b));
+
+    sortedTeams.forEach(t => {
+      sel.innerHTML += `<option value="${t}">${t}</option>`;
+    });
+  });
+
+  window.teamStats = teams;
+}
+
+function compare() {
+  const a = document.getElementById("teamA").value.trim();
+  const b = document.getElementById("teamB").value.trim();
+  if (!a || !b || a === b) return;
+
+  // --- Helper: get all matches for a team ---
+  function getAllMatches(team){
+    return matches.filter(m => m.home===team || m.away===team)
+                  .sort((x,y)=> new Date(y.date)-new Date(x.date));
+  }
+
+  // --- Helper: recent form weighting & stats ---
+  function calc(team){
+    const teamMatches = getAllMatches(team);
+    let totalWeight = 0, s=0, c=0, gg=0, ov=0, cs=0, wins=0, draws=0, losses=0;
+    const weights = teamMatches.map((m,i)=>1/(i+1)); // more recent = higher weight
+
+    teamMatches.forEach((m,i)=>{
+      const gf = m.home===team ? m.hg : m.ag;
+      const ga = m.home===team ? m.ag : m.hg;
+      const w = weights[i];
+      totalWeight += w;
+      s += gf*w; 
+      c += ga*w;
+      if(gf>0 && ga>0) gg+=w;
+      if(gf+ga>2) ov+=w;
+      if(ga===0) cs+=w;
+      if(gf>ga) wins+=w;
+      else if(gf<ga) losses+=w;
+      else draws+=w;
+    });
+
+    // Detect streaks
+    let streak=0, maxStreak=0, lastResult=null;
+    teamMatches.forEach(m=>{
+      const gf = m.home===team ? m.hg : m.ag;
+      const ga = m.home===team ? m.ag : m.hg;
+      const res = gf>ga ? "W" : gf<ga ? "L" : "D";
+      if(res===lastResult) streak++;
+      else streak=1;
+      lastResult=res;
+      if(streak>maxStreak) maxStreak=streak;
+    });
+
+    // Team style classification
+    let style = "Balanced";
+    const attack = s/totalWeight;
+    const defense = c/totalWeight;
+    if(attack>=1.5 && defense<=1) style="Attacking";
+    else if(attack<=1 && defense>=1.5) style="Defensive";
+
+    return {
+      totalMatches: teamMatches.length,
+      avgS: s/totalWeight,
+      avgC: c/totalWeight,
+      gd: s-c,
+      gg:(gg/totalWeight)*100,
+      ov:(ov/totalWeight)*100,
+      cs:(cs/totalWeight)*100,
+      winRate:(wins/totalWeight)*100,
+      drawRate:(draws/totalWeight)*100,
+      lossRate:(losses/totalWeight)*100,
+      recentMatches: teamMatches.slice(0,5),
+      maxStreak,
+      style
+    };
+  }
+
+  const A = calc(a);
+  const B = calc(b);
+
+  const minMatches = 5;
+  if(A.totalMatches<minMatches || B.totalMatches<minMatches){
+    document.getElementById("comparison").innerHTML = `
+      <h3>${a} vs ${b}</h3>
+      ⚠️ Not enough data for confident prediction. Need at least ${minMatches} matches per team.
+    `;
+    return;
+  }
+
+  // --- Edge & strong recommendation ---
+  let edge="Balanced", edgeStrength=0;
+  const gdDiff = A.gd - B.gd;
+  if(gdDiff>=1.5) { edge=a; edgeStrength=gdDiff; }
+  else if(gdDiff<=-1.5) { edge=b; edgeStrength=-gdDiff; }
+
+  // Asian Handicap logic
+  let handicap="No clear handicap";
+  if(edge===a && A.avgS>=1.5 && B.avgC>=1.5) handicap=`${a} -1`;
+  else if(edge===b && B.avgS>=1.5 && A.avgC>=1.5) handicap=`${b} -1`;
+  else if(edge!=="Balanced") handicap=`${edge===a?b:a} +1`;
+
+  // --- Correct Score & goals prediction ---
+  function calcScoreAndGoals(team1, team2){
+    let freq={}, total=0, totalGoalsList=[];
+    const t1Matches = getAllMatches(team1);
+    const t2Matches = getAllMatches(team2);
+
+    matches.forEach(m=>{
+      if((m.home===team1 && m.away===team2) || (m.home===team2 && m.away===team1)){
+        const score=m.home===team1? `${m.hg}-${m.ag}` : `${m.ag}-${m.hg}`;
+        freq[score]=(freq[score]||0)+1;
+        total++; totalGoalsList.push(m.hg+m.ag);
+      }
+    });
+
+    // Fallback to all matches
+    if(total<5){
+      [t1Matches,t2Matches].forEach(arr=>{
+        arr.forEach(m=>{
+          const score=`${m.hg}-${m.ag}`;
+          freq[score]=(freq[score]||0)+1;
+          total++; totalGoalsList.push(m.hg+m.ag);
+        });
+      });
+    }
+
+    const sortedScores = Object.entries(freq)
+      .sort((a,b)=>b[1]-a[1])
+      .slice(0,5)
+      .map(s=>({score:s[0], prob:((s[1]/total)*100).toFixed(0)}));
+
+    let scoreHtml="";
+    if(sortedScores.length===0) scoreHtml="Not enough data for score prediction";
+    else{
+      scoreHtml="<table border='1' cellpadding='5'><tr><th>Scoreline</th><th>Probability %</th></tr>";
+      sortedScores.forEach(ts=> scoreHtml+=`<tr><td>${ts.score}</td><td>${ts.prob}%</td></tr>`);
+      scoreHtml+="</table>";
+    }
+    return {sortedScores, totalGoalsList, scoreHtml};
+  }
+
+  const {sortedScores, totalGoalsList, scoreHtml} = calcScoreAndGoals(a,b);
+
+  // --- Weighted 1X2 + NO BET logic ---
+  let drawCount=0, homeWinCount=0, awayWinCount=0;
+  sortedScores.forEach(cs=>{
+    const [h,aScore] = cs.score.split("-").map(Number);
+    const prob = parseInt(cs.prob);
+    if(h===aScore) drawCount+=prob;
+    else if(h>aScore) homeWinCount+=prob;
+    else awayWinCount+=prob;
+  });
+
+  let final1X2="Balanced";
+  if(drawCount>=homeWinCount && drawCount>=awayWinCount) final1X2="Draw";
+  else if(homeWinCount>=awayWinCount) final1X2=a;
+  else final1X2=b;
+
+  // NO BET protection
+  const totalProb = drawCount + homeWinCount + awayWinCount;
+  if(totalProb<60) final1X2="NO BET";
+
+  // --- Smarter Over/Under & GG ---
+  const topCS = sortedScores[0]?.score.split("-").map(Number) || [0,0];
+  const totalGoals = topCS[0]+topCS[1];
+  const csGG = topCS[0]>0 && topCS[1]>0;
+  
+  // Multiple Over/Under levels
+  let csOver="", csUnder="";
+  if(totalGoals>=4) csOver="Over 3.5";
+  else if(totalGoals>=3 && totalGoals<4) csOver="Over 2.5";
+  else if(totalGoals>=2 && totalGoals<3) csOver="Over 1.5";
+  
+  if(totalGoals<=1) csUnder="Under 1.5";
+  else if(totalGoals<=2 && totalGoals>1) csUnder="Under 2.5";
+  else if(totalGoals<=3 && totalGoals>2) csUnder="Under 3.5";
+
+  // --- Double Chance Calculation ---
+  let doubleChance = "";
+  const homeProb = homeWinCount/totalProb*100;
+  const awayProb = awayWinCount/totalProb*100;
+  const drawProb = drawCount/totalProb*100;
+  
+  if((homeProb + drawProb) >= 70) doubleChance = "1X (Home Win or Draw)";
+  else if((awayProb + drawProb) >= 70) doubleChance = "X2 (Away Win or Draw)";
+  else if((homeProb + awayProb) >= 70) doubleChance = "12 (Home or Away Win - No Draw)";
+
+  // --- Half Time/Full Time ---
+  let htft = "";
+  if(edge === a && A.avgS > 1.2 && A.winRate > 60) htft = "Home/Home";
+  else if(edge === b && B.avgS > 1.2 && B.winRate > 60) htft = "Away/Away";
+  else if(edge !== "Balanced" && A.drawRate > 40 && B.drawRate > 40) htft = "Draw/Draw";
+
+  // --- Both Teams to Score (Yes/No) ---
+  let btts = "";
+  const avgGG = (A.gg + B.gg) / 2;
+  if(avgGG >= 65) btts = "Yes";
+  else if(avgGG <= 35) btts = "No";
+
+  // --- Win to Nil ---
+  let winToNil = "";
+  if(edge === a && A.cs >= 40 && B.avgS <= 0.8) winToNil = `${a} to Win to Nil`;
+  else if(edge === b && B.cs >= 40 && A.avgS <= 0.8) winToNil = `${b} to Win to Nil`;
+
+  // --- Exact Goals ---
+  let exactGoals = "";
+  const goalFreq = {};
+  totalGoalsList.forEach(g => {
+    goalFreq[g] = (goalFreq[g] || 0) + 1;
+  });
+  
+  const sortedGoals = Object.entries(goalFreq)
+    .sort((a,b) => b[1] - a[1])
+    .slice(0,3);
+    
+  if(sortedGoals.length > 0) {
+    const totalGames = totalGoalsList.length;
+    exactGoals = sortedGoals.map(g => `Exact ${g[0]} goals: ${((g[1]/totalGames)*100).toFixed(0)}%`).join(", ");
+  }
+
+  // --- Draw No Bet ---
+  let drawNoBet = "";
+  if(edge !== "Balanced" && Math.abs(homeProb - awayProb) >= 20) {
+    drawNoBet = `${edge} (Draw No Bet)`;
+  }
+
+  // --- Match Result & Both Teams to Score ---
+  let resultAndBtts = "";
+  if(final1X2 !== "Draw" && final1X2 !== "NO BET" && final1X2 !== "Balanced") {
+    if(btts === "Yes") resultAndBtts = `${final1X2} & Yes`;
+    else if(btts === "No") resultAndBtts = `${final1X2} & No`;
+  }
+
+  // --- First/Last Goal Scorer Market ---
+  let firstGoalTeam = "";
+  if(A.avgS > 1.3 && A.avgS > B.avgS) firstGoalTeam = `${a} to score first`;
+  else if(B.avgS > 1.3 && B.avgS > A.avgS) firstGoalTeam = `${b} to score first`;
+
+  // --- Final recommended market (prioritized) ---
+  let recommendedMarkets = [];
+  
+  if(final1X2 !== "Balanced" && final1X2 !== "NO BET") recommendedMarkets.push(`<b>1X2:</b> ${final1X2}`);
+  if(drawNoBet) recommendedMarkets.push(`<b>Draw No Bet:</b> ${drawNoBet}`);
+  if(doubleChance) recommendedMarkets.push(`<b>Double Chance:</b> ${doubleChance}`);
+  if(csOver) recommendedMarkets.push(`<b>Over/Under:</b> ${csOver}`);
+  if(btts) recommendedMarkets.push(`<b>Both Teams to Score:</b> ${btts}`);
+  if(handicap !== "No clear handicap") recommendedMarkets.push(`<b>Asian Handicap:</b> ${handicap}`);
+  if(htft) recommendedMarkets.push(`<b>HT/FT:</b> ${htft}`);
+  if(winToNil) recommendedMarkets.push(`<b>Win to Nil:</b> ${winToNil}`);
+  if(resultAndBtts) recommendedMarkets.push(`<b>Result & BTTS:</b> ${resultAndBtts}`);
+  if(firstGoalTeam) recommendedMarkets.push(`<b>First Goal:</b> ${firstGoalTeam}`);
+
+  // If no strong markets, show less confident options
+  if(recommendedMarkets.length === 0) {
+    if(exactGoals) recommendedMarkets.push(`<b>Exact Total Goals:</b> ${exactGoals}`);
+    if(csUnder) recommendedMarkets.push(`<b>Under:</b> ${csUnder}`);
+    recommendedMarkets.push("No strong market (Low confidence)");
+  }
+
+  // --- Display ---
+  document.getElementById("comparison").innerHTML=`
+    <h3>${a} vs ${b}</h3>
+    <table border="1" cellpadding="6">
+      <tr><th>Stat</th><th>${a}</th><th>${b}</th></tr>
+      <tr><td>Matches Used</td><td>${A.totalMatches}</td><td>${B.totalMatches}</td></tr>
+      <tr><td>Avg Goals Scored</td><td>${A.avgS.toFixed(2)}</td><td>${B.avgS.toFixed(2)}</td></tr>
+      <tr><td>Avg Goals Conceded</td><td>${A.avgC.toFixed(2)}</td><td>${B.avgC.toFixed(2)}</td></tr>
+      <tr><td>Goal Difference</td><td>${A.gd.toFixed(2)}</td><td>${B.gd.toFixed(2)}</td></tr>
+      <tr><td>GG %</td><td>${A.gg.toFixed(0)}%</td><td>${B.gg.toFixed(0)}%</td></tr>
+      <tr><td>Over 2.5 %</td><td>${A.ov.toFixed(0)}%</td><td>${B.ov.toFixed(0)}%</td></tr>
+      <tr><td>Win Rate</td><td>${A.winRate.toFixed(0)}%</td><td>${B.winRate.toFixed(0)}%</td></tr>
+      <tr><td>Clean Sheets %</td><td>${A.cs.toFixed(0)}%</td><td>${B.cs.toFixed(0)}%</td></tr>
+      <tr><td>Max Streak</td><td>${A.maxStreak}</td><td>${B.maxStreak}</td></tr>
+      <tr><td>Style</td><td>${A.style}</td><td>${B.style}</td></tr>
+    </table>
+
+    <br><b>Likely Edge:</b> ${edge} <i>(Strength: ${edgeStrength.toFixed(1)})</i><br>
+    <b>Asian Handicap:</b> ${handicap}<br><br>
+
+    <h3>📊 Correct Score Probabilities</h3>
+    ${scoreHtml}
+
+    <h3>✅ Recommended Markets</h3>
+    <ul>
+      ${recommendedMarkets.map(market => `<li>${market}</li>`).join('')}
+    </ul>
+    
+    <h3>📈 Additional Insights</h3>
+    <p><b>Goal Expectancy:</b> ${((A.avgS + B.avgC)/2).toFixed(2)} - ${((B.avgS + A.avgC)/2).toFixed(2)}</p>
+    <p><b>Both Teams to Score Probability:</b> ${((A.gg + B.gg)/2).toFixed(0)}%</p>
+    <p><b>Clean Sheet Probability ${a}:</b> ${((A.cs + (100-B.gg))/2).toFixed(0)}%</p>
+    <p><b>Clean Sheet Probability ${b}:</b> ${((B.cs + (100-A.gg))/2).toFixed(0)}%</p>
+  `;
+}
+</script>
+
+
+</body>
+</html>
