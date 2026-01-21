@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Football Analyzer + Advanced Auto-Learn</title>
+  <link 
+  rel="stylesheet" 
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
+  <style>
+    body { 
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+      padding: 20px; 
+      max-width: 1400px; 
+      margin: 0 auto; 
+      background-color: #f5f7fa;
+      color: #333;
+    }
+    
+    h2 { 
+      color: #2c3e50; 
+      border-bottom: 2px solid #3498db; 
+      padding-bottom: 10px;
+    }
+    h3 { 
+      color: #34495e; 
+      margin-top: 25px;
+    }
+    h4 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+    }
+    textarea { 
+      width: 100%; 
+      height: 200px; 
+      margin-bottom: 10px;
+      padding: 12px;
+      border: 1px solid #bdc3c7;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 14px;
+      resize: vertical;
+      box-sizing: border-box;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+    }
+    button { 
+      padding: 10px 18px; 
+      margin: 5px 5px 5px 0; 
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    button:active {
+      transform: translateY(1px);
+    }
+    button.secondary {
+      background-color: #7f8c8d;
+    }
+    button.secondary:hover {
+      background-color: #636e72;
+    }
+    button.danger {
+      background-color: #e74c3c;
+    }
+    button.danger:hover {
+      background-color: #c0392b;
+    }
+    select { 
+      padding: 8px 12px; 
+      margin-right: 10px; 
+      border: 1px solid #bdc3c7;
+      border-radius: 4px;
+      background-color: white;
+      min-width: 180px;
+    }
+    .box { 
+      margin-top: 20px; 
+      padding: 15px; 
+      background-color: white;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    table { 
+      border-collapse: collapse; 
+      margin-top: 10px; 
+      width: 100%; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    th, td { 
+      border: 1px solid #ddd; 
+      padding: 10px 12px; 
+      text-align: center; 
+    }
+    th { 
+      background: #ecf0f1; 
+      font-weight: 600;
+      color: #2c3e50;
+    }
+    tr:nth-child(even) {
+      background-color: #f8f9fa;
+    }
+    tr:hover {
+      background-color: #f1f8ff;
+    }
+    .table-container {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #2c3e50;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+    }
+    footer a {
+      color: #3498db;
+      text-decoration: none;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+    .stat-badge {
+      display: inline-block;
+      padding: 5px 10px;
+      background-color: #ecf0f1;
+      border-radius: 20px;
+      font-weight: bold;
+      margin: 0 5px;
+    }
+    .comparison-result {
+      background-color: #e8f4fc;
+      padding: 15px;
+      border-radius: 6px;
+      margin-top: 15px;
+    }
+    .market-card {
+      background-color: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border-left: 4px solid #3498db;
+    }
+    .market-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .market-title {
+      font-weight: bold;
+      font-size: 16px;
+      color: #2c3e50;
+    }
+    .market-probability {
+      background-color: #2ecc71;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-weight: bold;
+    }
+    .market-probability.medium {
+      background-color: #f39c12;
+    }
+    .market-probability.low {
+      background-color: #e74c3c;
+    }
+    .pattern-indicator {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin: 2px;
+    }
+    .pattern-positive {
+      background-color: #d4edda;
+      color: #155724;
+    }
+    .pattern-neutral {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+    .pattern-negative {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+    .market-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .confidence-meter {
+      height: 8px;
+      background-color: #ecf0f1;
+      border-radius: 4px;
+      margin: 10px 0;
+      overflow: hidden;
+    }
+    .confidence-fill {
+      height: 100%;
+      border-radius: 4px;
+    }
+    .prediction-verdict {
+      background-color: #fff3cd;
+      border: 1px solid #ffeaa7;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    .prediction-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #d35400;
+      margin-bottom: 10px;
+    }
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #dfe6e9;
+      margin: 30px 0;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Virtual Football Analyzer + Advanced Auto-Learn</h2>
+ <p style="margin-top:10px;">
+    Follow us on FACEBOOK: <strong>Deh Emanuels</strong>
+      <a href="https://www.facebook.com/profile.php?id=100075395107907" target="_blank"
+       style="margin:0 6px;color:#3b5998;font-size:18px;text-decoration:none;vertical-align:middle;">
+      <i class="fab fa-facebook"></i>
+    </a>
+
+
+    <a href="https://wa.me/254704518130" target="_blank"
+       style="margin:0 6px;color:#25D366;font-size:18px;text-decoration:none;vertical-align:middle;">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+    <a href="https://www.facebook.com/profile.php?id=100075395107907" target="_blank" style="margin:0 6px;">
+      <img 
+        src="https://i.ibb.co/5gm3tHp1/IMG-20240130-093230-773.png"
+        alt="Profile"
+        style="width:32px;height:32px;border-radius:50%;object-fit:cover;vertical-align:middle;"
+      >
+    </a>
+  </p>
+<script>
+  atOptions = {
+    'key' : 'b8933113d65f10d913689af948a8ff21',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/b8933113d65f10d913689af948a8ff21/invoke.js"></script>
+<textarea id="input" placeholder="Paste match results (4 lines per match):
+Team A
+2
+1
+Team B
+Team C
+0
+3
+Team D
+..."></textarea><br>
+
+<button onclick="addMatches()">Add Matches</button>
+<button onclick="clearAll()" class="danger">Clear All Data</button>
+
+<div class="box">
+  <b>Total Matches Saved:</b> <span id="count" class="stat-badge">0</span>
+</div>
+
+<div class="box" id="stats"></div>
+
+<hr>
+
+<h3>Team Comparison with Market Analysis</h3>
+<select id="teamA"></select>
+<select id="teamB"></select>
+<button onclick="compare()">Compare & Analyze Markets</button>
+
+<div class="box" id="comparison"></div>
+
+<hr>
+
+<h3>Team Strength & Analysis Table</h3>
+<div class="controls">
+  <button onclick="toggleTable()" id="toggleTableBtn">Hide Table</button><script>
+  atOptions = {
+    'key' : 'b8933113d65f10d913689af948a8ff21',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/b8933113d65f10d913689af948a8ff21/invoke.js"></script>
+</div>
+<div class="table-container" id="teamTableContainer">
+  <div class="box" id="teamTable"></div>
+</div>
+
+<hr>
+
+<h3>Learning Stats</h3>
+<script>
+  atOptions = {
+    'key' : 'b8933113d65f10d913689af948a8ff21',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/b8933113d65f10d913689af948a8ff21/invoke.js"></script>
+<div class="box" id="learningStats"></div>
+
+
+<footer>
+  <p style="margin-top:10px;">
+    Follow us on FACEBOOK: <strong>Deh Emanuels</strong>
+      <a href="https://www.facebook.com/profile.php?id=100075395107907" target="_blank"
+       style="margin:0 6px;color:#3b5998;font-size:18px;text-decoration:none;vertical-align:middle;">
+      <i class="fab fa-facebook"></i>
+    </a>
+
+    <a href="https://wa.me/254704518130" target="_blank"
+       style="margin:0 6px;color:#25D366;font-size:18px;text-decoration:none;vertical-align:middle;">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </p>
+
+    <a href="https://www.facebook.com/profile.php?id=100075395107907" target="_blank" style="margin:0 6px;">
+      <img 
+        src="https://i.ibb.co/5gm3tHp1/IMG-20240130-093230-773.png"
+        alt="Profile"
+        style="width:32px;height:32px;border-radius:50%;object-fit:cover;vertical-align:middle;"
+      >
+    </a>
+
+  
+
+  <p><strong>Virtual Football Analyzer</strong> &copy; 2023</p>
+  <p>Advanced football statistics and prediction tool for virtual matches</p>
+  <p>Data is stored locally in your browser | Total matches: <span id="footerCount">0</span></p>
+  <p>
+    <a href="javascript:void(0)" onclick="exportData()">Export Data</a> | 
+    <a href="javascript:void(0)" onclick="importData()">Import Data</a>
+  </p>
+  <script>
+  atOptions = {
+    'key' : 'd925dc4925c41f9e50bbf30bfb1eb488',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/d925dc4925c41f9e50bbf30bfb1eb488/invoke.js"></script>
+</footer>
+
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<!-- Font Awesome for icons -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+<script>
+// ---------- Match Storage ----------
+let matches = JSON.parse(localStorage.getItem("matches")) || [];
+let tableVisible = true;
+
+// Initialize all displays
+updateCount();
+updateStats();
+updateTeams();
+updateTeamTable();
+updateLearningStats();
+
+// ---------- Add Matches ----------
+function addMatches() {
+  const lines = document.getElementById("input").value.trim().split("\n").map(l => l.trim()).filter(l=>l!=="");
+  let addedCount = 0;
+  
+  for(let i=0; i<lines.length; i+=4){
+    const home=lines[i], hg=parseInt(lines[i+1]), ag=parseInt(lines[i+2]), away=lines[i+3];
+    if(!home||!away||isNaN(hg)||isNaN(ag)) continue;
+    matches.push({home, away, hg, ag});
+    addedCount++;
+  }
+  
+  if(addedCount > 0) {
+    localStorage.setItem("matches", JSON.stringify(matches));
+    document.getElementById("input").value="";
+    updateCount(); 
+    updateStats(); 
+    updateTeams(); 
+    updateTeamTable(); 
+    updateLearningStats();
+    
+    // Show success message
+    alert(`Successfully added ${addedCount} new match${addedCount > 1 ? 'es' : ''}!`);
+  } else {
+    alert("No valid matches found. Please check your input format.");
+  }
+}
+
+// ---------- Clear All ----------
+function clearAll(){
+  if(!confirm("Are you sure you want to clear all saved matches and learning data? This action cannot be undone.")) return;
+  matches=[]; 
+  localStorage.removeItem("matches"); 
+  localStorage.removeItem("vf_learning_stats"); 
+  localStorage.removeItem("last_prediction");
+  updateCount(); 
+  updateStats(); 
+  updateTeams(); 
+  updateTeamTable(); 
+  updateLearningStats();
+  document.getElementById("comparison").innerHTML="";
+  alert("All data has been cleared.");
+}
+
+// ---------- Toggle Table Visibility ----------
+function toggleTable() {
+  const tableContainer = document.getElementById("teamTableContainer");
+  const toggleBtn = document.getElementById("toggleTableBtn");
+  
+  tableVisible = !tableVisible;
+  
+  if (tableVisible) {
+    tableContainer.style.display = "block";
+    toggleBtn.textContent = "Hide Table";
+    toggleBtn.classList.remove("secondary");
+  } else {
+    tableContainer.style.display = "none";
+    toggleBtn.textContent = "Show Table";
+    toggleBtn.classList.add("secondary");
+  }
+}
+
+// ---------- Update Count ----------
+function updateCount(){ 
+  const count = matches.length;
+  document.getElementById("count").textContent = count;
+  document.getElementById("footerCount").textContent = count;
+}
+
+// ---------- Update Stats ----------
+function updateStats(){
+  if(matches.length===0){ 
+    document.getElementById("stats").innerHTML="<p>No matches added yet. Add some matches to see statistics.</p>"; 
+    return; 
+  }
+  
+  let goals=0, over25=0, gg=0, over15=0;
+  matches.forEach(m=>{ 
+    const total=m.hg+m.ag; 
+    goals+=total; 
+    if(total>2.5) over25++; 
+    if(m.hg>0 && m.ag>0) gg++;
+    if(total>1.5) over15++;
+  });
+  
+  document.getElementById("stats").innerHTML=`
+    <h3>Overall Statistics</h3>
+    <p><b>Total Goals:</b> <span class="stat-badge">${goals}</span></p>
+    <p><b>Average Goals per Match:</b> <span class="stat-badge">${(goals/matches.length).toFixed(2)}</span></p>
+    <p><b>Over 2.5 Goals:</b> <span class="stat-badge">${over25} (${((over25/matches.length)*100).toFixed(0)}%)</span></p>
+    <p><b>Over 1.5 Goals:</b> <span class="stat-badge">${over15} (${((over15/matches.length)*100).toFixed(0)}%)</span></p>
+    <p><b>Both Teams Scored (GG):</b> <span class="stat-badge">${gg} (${((gg/matches.length)*100).toFixed(0)}%)</span></p>
+  `;
+}
+
+// ---------- Team Statistics ----------
+function updateTeams(){
+  let teams={};
+  
+  // Process all matches
+  matches.forEach(m=>{
+    // Initialize teams if not exists
+    if(!teams[m.home]) teams[m.home]=initTeamStats();
+    if(!teams[m.away]) teams[m.away]=initTeamStats();
+
+    // Home team stats
+    const homeTeam = teams[m.home];
+    homeTeam.home.matches++;
+    homeTeam.home.scored += m.hg;
+    homeTeam.home.conceded += m.ag;
+    homeTeam.home.goalDiff += (m.hg - m.ag);
+    if(m.hg > 0 && m.ag > 0) homeTeam.home.gg++;
+    if(m.hg + m.ag > 2.5) homeTeam.home.ov25++;
+    if(m.hg + m.ag > 1.5) homeTeam.home.ov15++;
+    if(m.ag === 0) homeTeam.home.cs++;
+    if(m.hg > m.ag) {
+      homeTeam.records.wins++;
+      homeTeam.home.wins++;
+    } else if(m.hg < m.ag) {
+      homeTeam.records.losses++;
+      homeTeam.home.losses++;
+    } else {
+      homeTeam.records.draws++;
+      homeTeam.home.draws++;
+    }
+
+    // Away team stats
+    const awayTeam = teams[m.away];
+    awayTeam.away.matches++;
+    awayTeam.away.scored += m.ag;
+    awayTeam.away.conceded += m.hg;
+    awayTeam.away.goalDiff += (m.ag - m.hg);
+    if(m.ag > 0 && m.hg > 0) awayTeam.away.gg++;
+    if(m.hg + m.ag > 2.5) awayTeam.away.ov25++;
+    if(m.hg + m.ag > 1.5) awayTeam.away.ov15++;
+    if(m.hg === 0) awayTeam.away.cs++;
+    if(m.ag > m.hg) {
+      awayTeam.records.wins++;
+      awayTeam.away.wins++;
+    } else if(m.ag < m.hg) {
+      awayTeam.records.losses++;
+      awayTeam.away.losses++;
+    } else {
+      awayTeam.records.draws++;
+      awayTeam.away.draws++;
+    }
+  });
+
+  window.teamStats = teams;
+
+  // Update team selection dropdowns
+  const selects=[document.getElementById("teamA"),document.getElementById("teamB")];
+  selects.forEach(sel=>{
+    const currentValue = sel.value;
+    sel.innerHTML="<option value=''>Select team</option>";
+    Object.keys(teams).sort().forEach(t=> {
+      sel.innerHTML+=`<option value="${t}" ${currentValue===t?'selected':''}>${t}</option>`;
+    });
+  });
+}
+
+function initTeamStats() {
+  return {
+    home: {
+      matches:0, scored:0, conceded:0, goalDiff:0, gg:0, 
+      ov25:0, ov15:0, cs:0, wins:0, losses:0, draws:0
+    },
+    away: {
+      matches:0, scored:0, conceded:0, goalDiff:0, gg:0, 
+      ov25:0, ov15:0, cs:0, wins:0, losses:0, draws:0
+    },
+    records: {wins:0, losses:0, draws:0}
+  };
+}
+
+// ---------- Team Analysis Table ----------
+function updateTeamTable(){
+  if(!window.teamStats || Object.keys(window.teamStats).length === 0) {
+    document.getElementById("teamTable").innerHTML = "<p>No team data available. Add matches first.</p>";
+    return;
+  }
+  
+  const teams=window.teamStats;
+  let html=`<table>
+    <tr>
+      <th>Team</th>
+      <th>Home Strength</th>
+      <th>Away Strength</th>
+      <th>GG %</th>
+      <th>Over 2.5 %</th>
+      <th>Over 1.5 %</th>
+      <th>Clean Sheet %</th>
+      <th>Total Wins</th>
+      <th>Total Losses</th>
+      <th>Total Draws</th>
+      <th>Win Rate</th>
+    </tr>`;
+
+  Object.keys(teams).sort().forEach(team=>{
+    const t=teams[team];
+    const homeMatches = t.home.matches || 0;
+    const awayMatches = t.away.matches || 0;
+    const totalMatches = homeMatches + awayMatches || 1;
+
+    // Calculate strengths with more sophisticated formula
+    const homeStrength = homeMatches > 0 
+      ? Math.max(0, Math.min(100, Math.round(
+          ((t.home.scored / homeMatches) * 15) - 
+          ((t.home.conceded / homeMatches) * 10) +
+          ((t.home.wins / homeMatches) * 25) -
+          ((t.home.losses / homeMatches) * 15)
+        )))
+      : 0;
+    
+    const awayStrength = awayMatches > 0 
+      ? Math.max(0, Math.min(100, Math.round(
+          ((t.away.scored / awayMatches) * 15) - 
+          ((t.away.conceded / awayMatches) * 10) +
+          ((t.away.wins / awayMatches) * 25) -
+          ((t.away.losses / awayMatches) * 15)
+        )))
+      : 0;
+
+    const ggPct = Math.round((t.home.gg + t.away.gg) / totalMatches * 100);
+    const ov25Pct = Math.round((t.home.ov25 + t.away.ov25) / totalMatches * 100);
+    const ov15Pct = Math.round((t.home.ov15 + t.away.ov15) / totalMatches * 100);
+    const csPct = Math.round((t.home.cs + t.away.cs) / totalMatches * 100);
+    const winRate = Math.round((t.records.wins / totalMatches) * 100);
+
+    html+=`<tr>
+      <td><strong>${team}</strong></td>
+      <td style="background-color: ${getStrengthColor(homeStrength)}">${homeStrength}%</td>
+      <td style="background-color: ${getStrengthColor(awayStrength)}">${awayStrength}%</td>
+      <td>${ggPct}%</td>
+      <td>${ov25Pct}%</td>
+      <td>${ov15Pct}%</td>
+      <td>${csPct}%</td>
+      <td><span style="color: #27ae60;">${t.records.wins}</span></td>
+      <td><span style="color: #e74c3c;">${t.records.losses}</span></td>
+      <td><span style="color: #f39c12;">${t.records.draws}</span></td>
+      <td><strong>${winRate}%</strong></td>
+    </tr>`;
+  });
+
+  html+="</table>";
+  document.getElementById("teamTable").innerHTML=html;
+}
+
+// Helper function for color coding
+function getStrengthColor(strength) {
+  if (strength >= 80) return '#d4edda';
+  if (strength >= 60) return '#c3e6cb';
+  if (strength >= 40) return '#fff3cd';
+  if (strength >= 20) return '#f8d7da';
+  return '#f5c6cb';
+}
+
+// ---------- Pattern Analysis Functions ----------
+function analyzePatterns(teamA, teamB, teams, headToHead) {
+  const patterns = [];
+  
+  // Recent form pattern
+  const recentMatches = matches.slice(-20); // Last 20 matches
+  const teamARecent = recentMatches.filter(m => m.home === teamA || m.away === teamA);
+  const teamBRecent = recentMatches.filter(m => m.home === teamB || m.away === teamB);
+  
+  // Calculate recent form
+  const teamAForm = calculateForm(teamARecent, teamA);
+  const teamBForm = calculateForm(teamBRecent, teamB);
+  
+  patterns.push({
+    name: "Recent Form",
+    teamA: teamAForm,
+    teamB: teamBForm,
+    verdict: teamAForm > teamBForm + 10 ? `${teamA} has better form` : 
+             teamBForm > teamAForm + 10 ? `${teamB} has better form` : 
+             "Form is relatively equal"
+  });
+  
+  // Scoring pattern analysis
+  const teamAScoringPattern = analyzeScoringPattern(teamARecent, teamA);
+  const teamBScoringPattern = analyzeScoringPattern(teamBRecent, teamB);
+  
+  patterns.push({
+    name: "Scoring Consistency",
+    teamA: teamAScoringPattern.consistency,
+    teamB: teamBScoringPattern.consistency,
+    verdict: teamAScoringPattern.consistency > teamBScoringPattern.consistency + 15 ? `${teamA} more consistent` :
+             teamBScoringPattern.consistency > teamAScoringPattern.consistency + 15 ? `${teamB} more consistent` :
+             "Similar scoring consistency"
+  });
+  
+  // Head-to-head pattern
+  if (headToHead.length >= 2) {
+    const h2hPattern = analyzeH2HPattern(headToHead, teamA);
+    patterns.push({
+      name: "Head-to-Head Pattern",
+      data: h2hPattern,
+      verdict: h2hPattern.dominance > 60 ? `${teamA} dominates H2H` :
+               h2hPattern.dominance < 40 ? `${teamB} dominates H2H` :
+               "Competitive H2H history"
+    });
+  }
+  
+  // Defensive pattern
+  const teamADefense = teams[teamA].home.conceded + teams[teamA].away.conceded;
+  const teamBDefense = teams[teamB].home.conceded + teams[teamB].away.conceded;
+  const teamAMatches = teams[teamA].home.matches + teams[teamA].away.matches;
+  const teamBMatches = teams[teamB].home.matches + teams[teamB].away.matches;
+  
+  patterns.push({
+    name: "Defensive Strength",
+    teamA: Math.round((teamADefense / teamAMatches) * 100) / 100,
+    teamB: Math.round((teamBDefense / teamBMatches) * 100) / 100,
+    verdict: (teamADefense / teamAMatches) < (teamBDefense / teamBMatches) - 0.3 ? `${teamA} has better defense` :
+             (teamBDefense / teamBMatches) < (teamADefense / teamAMatches) - 0.3 ? `${teamB} has better defense` :
+             "Similar defensive records"
+  });
+  
+  return patterns;
+}
+
+function calculateForm(matches, team) {
+  if (matches.length === 0) return 50;
+  
+  let points = 0;
+  matches.forEach(match => {
+    if (match.home === team) {
+      if (match.hg > match.ag) points += 3;
+      else if (match.hg === match.ag) points += 1;
+    } else if (match.away === team) {
+      if (match.ag > match.hg) points += 3;
+      else if (match.ag === match.hg) points += 1;
+    }
+  });
+  
+  return Math.round((points / (matches.length * 3)) * 100);
+}
+
+function analyzeScoringPattern(matches, team) {
+  if (matches.length === 0) return { consistency: 50, trend: "stable" };
+  
+  const scores = [];
+  matches.forEach(match => {
+    if (match.home === team) scores.push(match.hg);
+    else if (match.away === team) scores.push(match.ag);
+  });
+  
+  if (scores.length === 0) return { consistency: 50, trend: "stable" };
+  
+  const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+  const variance = scores.reduce((sq, n) => sq + Math.pow(n - avg, 2), 0) / scores.length;
+  const consistency = Math.max(0, 100 - (variance * 20));
+  
+  // Determine trend
+  const firstHalf = scores.slice(0, Math.ceil(scores.length / 2));
+  const secondHalf = scores.slice(Math.ceil(scores.length / 2));
+  const firstAvg = firstHalf.reduce((a, b) => a + b, 0) / (firstHalf.length || 1);
+  const secondAvg = secondHalf.reduce((a, b) => a + b, 0) / (secondHalf.length || 1);
+  
+  let trend = "stable";
+  if (secondAvg > firstAvg + 0.5) trend = "improving";
+  else if (secondAvg < firstAvg - 0.5) trend = "declining";
+  
+  return { consistency: Math.round(consistency), trend };
+}
+
+function analyzeH2HPattern(matches, teamA) {
+  let teamAWins = 0, teamBWins = 0, draws = 0;
+  let totalGoals = 0;
+  
+  matches.forEach(match => {
+    if (match.home === teamA) {
+      if (match.hg > match.ag) teamAWins++;
+      else if (match.hg < match.ag) teamBWins++;
+      else draws++;
+      totalGoals += match.hg + match.ag;
+    } else {
+      if (match.ag > match.hg) teamAWins++;
+      else if (match.ag < match.hg) teamBWins++;
+      else draws++;
+      totalGoals += match.hg + match.ag;
+    }
+  });
+  
+  const dominance = Math.round((teamAWins / matches.length) * 100);
+  const avgGoals = totalGoals / matches.length;
+  
+  return { dominance, avgGoals, teamAWins, teamBWins, draws };
+}
+
+// ---------- Market Analysis Functions ----------
+function analyzeMarkets(teamA, teamB, teams, headToHead, patterns) {
+  const markets = [];
+  
+  // Get team statistics
+  const tA = teams[teamA];
+  const tB = teams[teamB];
+  
+  // 1X2 Market (Home Win, Draw, Away Win)
+  const homeWinProbability = calculate1X2Probability(teamA, teamB, tA, tB);
+  markets.push({
+    name: "1X2 Market",
+    type: "main",
+    predictions: [
+      { market: `${teamA} Win`, probability: homeWinProbability.home, confidence: calculateConfidence(homeWinProbability.home) },
+      { market: "Draw", probability: homeWinProbability.draw, confidence: calculateConfidence(homeWinProbability.draw) },
+      { market: `${teamB} Win`, probability: homeWinProbability.away, confidence: calculateConfidence(homeWinProbability.away) }
+    ]
+  });
+  
+  // Double Chance
+  markets.push({
+    name: "Double Chance",
+    type: "safety",
+    predictions: [
+      { market: `${teamA} or Draw`, probability: homeWinProbability.home + homeWinProbability.draw, confidence: calculateConfidence(homeWinProbability.home + homeWinProbability.draw) },
+      { market: `${teamB} or Draw`, probability: homeWinProbability.away + homeWinProbability.draw, confidence: calculateConfidence(homeWinProbability.away + homeWinProbability.draw) },
+      { market: `${teamA} or ${teamB}`, probability: homeWinProbability.home + homeWinProbability.away, confidence: calculateConfidence(homeWinProbability.home + homeWinProbability.away) }
+    ]
+  });
+  
+  // Over/Under Markets
+  const goalProbabilities = calculateGoalProbabilities(tA, tB, headToHead);
+  markets.push({
+    name: "Over/Under Markets",
+    type: "goals",
+    predictions: [
+      { market: "Over 1.5 Goals", probability: goalProbabilities.over15, confidence: calculateConfidence(goalProbabilities.over15) },
+      { market: "Over 2.5 Goals", probability: goalProbabilities.over25, confidence: calculateConfidence(goalProbabilities.over25) },
+      { market: "Over 3.5 Goals", probability: goalProbabilities.over35, confidence: calculateConfidence(goalProbabilities.over35) },
+      { market: "Under 2.5 Goals", probability: 100 - goalProbabilities.over25, confidence: calculateConfidence(100 - goalProbabilities.over25) }
+    ]
+  });
+  
+  // Both Teams to Score (GG)
+  const ggProbability = calculateGGProbability(tA, tB, headToHead);
+  markets.push({
+    name: "Both Teams to Score (GG)",
+    type: "scoring",
+    predictions: [
+      { market: "Yes (GG)", probability: ggProbability.yes, confidence: calculateConfidence(ggProbability.yes) },
+      { market: "No (Clean Sheet)", probability: ggProbability.no, confidence: calculateConfidence(ggProbability.no) }
+    ]
+  });
+  
+  // Asian Handicap
+  const handicap = calculateAsianHandicap(tA, tB);
+  markets.push({
+    name: "Asian Handicap",
+    type: "handicap",
+    predictions: [
+      { market: `${teamA} ${handicap.handicap > 0 ? '+' : ''}${handicap.handicap}`, probability: handicap.teamAWin, confidence: calculateConfidence(handicap.teamAWin) },
+      { market: `${teamB} ${-handicap.handicap > 0 ? '+' : ''}${-handicap.handicap}`, probability: handicap.teamBWin, confidence: calculateConfidence(handicap.teamBWin) }
+    ]
+  });
+  
+  // Correct Score Range
+  const scoreProbabilities = calculateScoreProbabilities(tA, tB);
+  markets.push({
+    name: "Correct Score Range",
+    type: "exact",
+    predictions: scoreProbabilities.slice(0, 5).map(sp => ({
+      market: sp.score,
+      probability: sp.probability,
+      confidence: calculateConfidence(sp.probability * 3) // Scale up for display
+    }))
+  });
+  
+  return markets;
+}
+
+function calculate1X2Probability(teamA, teamB, tA, tB) {
+  // Calculate base probabilities from team stats
+  const teamAHomeMatches = tA.home.matches || 1;
+  const teamBAwayMatches = tB.away.matches || 1;
+  
+  const teamAHomeWinRate = (tA.home.wins / teamAHomeMatches) * 100;
+  const teamBAwayWinRate = (tB.away.wins / teamBAwayMatches) * 100;
+  const teamAHomeDrawRate = (tA.home.draws / teamAHomeMatches) * 100;
+  const teamBAwayDrawRate = (tB.away.draws / teamBAwayMatches) * 100;
+  
+  // Adjust based on strength difference
+  const strengthDiff = calculateTeamStrength(tA) - calculateTeamStrength(tB);
+  
+  let homeProb = 40 + (teamAHomeWinRate * 0.3) + (strengthDiff * 0.5);
+  let awayProb = 30 + (teamBAwayWinRate * 0.3) - (strengthDiff * 0.5);
+  let drawProb = 30 + ((teamAHomeDrawRate + teamBAwayDrawRate) * 0.2);
+  
+  // Normalize to 100%
+  const total = homeProb + awayProb + drawProb;
+  homeProb = Math.round((homeProb / total) * 100);
+  awayProb = Math.round((awayProb / total) * 100);
+  drawProb = Math.round((drawProb / total) * 100);
+  
+  return { home: homeProb, away: awayProb, draw: drawProb };
+}
+
+function calculateTeamStrength(team) {
+  const homeMatches = team.home.matches || 1;
+  const awayMatches = team.away.matches || 1;
+  
+  const homeStrength = ((team.home.scored / homeMatches) * 15) - 
+                      ((team.home.conceded / homeMatches) * 10) + 
+                      ((team.home.wins / homeMatches) * 25);
+  
+  const awayStrength = ((team.away.scored / awayMatches) * 15) - 
+                      ((team.away.conceded / awayMatches) * 10) + 
+                      ((team.away.wins / awayMatches) * 25);
+  
+  return (homeStrength + awayStrength) / 2;
+}
+
+function calculateGoalProbabilities(tA, tB, headToHead) {
+  // Average goals per match for both teams
+  const teamAGoalsPerMatch = ((tA.home.scored + tA.away.scored) / (tA.home.matches + tA.away.matches)) || 1.5;
+  const teamBGoalsPerMatch = ((tB.home.scored + tB.away.scored) / (tB.home.matches + tB.away.matches)) || 1.5;
+  
+  // Expected total goals
+  const expectedGoals = (teamAGoalsPerMatch + teamBGoalsPerMatch) / 2;
+  
+  // Calculate probabilities based on expected goals distribution
+  const over15 = Math.min(95, Math.max(20, Math.round(80 - (Math.abs(expectedGoals - 2) * 20))));
+  const over25 = Math.min(80, Math.max(10, Math.round(60 - (Math.abs(expectedGoals - 3) * 15))));
+  const over35 = Math.min(50, Math.max(5, Math.round(40 - (Math.abs(expectedGoals - 4) * 10))));
+  
+  return { over15, over25, over35 };
+}
+
+function calculateGGProbability(tA, tB, headToHead) {
+  const teamAGG = (tA.home.gg + tA.away.gg) / (tA.home.matches + tA.away.matches);
+  const teamBGG = (tB.home.gg + tB.away.gg) / (tB.home.matches + tB.away.matches);
+  
+  const ggProbability = Math.round(((teamAGG + teamBGG) / 2) * 100);
+  
+  return {
+    yes: Math.min(85, Math.max(15, ggProbability)),
+    no: 100 - Math.min(85, Math.max(15, ggProbability))
+  };
+}
+
+function calculateAsianHandicap(tA, tB) {
+  const strengthDiff = calculateTeamStrength(tA) - calculateTeamStrength(tB);
+  
+  // Determine handicap based on strength difference
+  let handicap = 0;
+  if (strengthDiff > 20) handicap = 1.5;
+  else if (strengthDiff > 10) handicap = 1;
+  else if (strengthDiff > 5) handicap = 0.5;
+  else if (strengthDiff < -20) handicap = -1.5;
+  else if (strengthDiff < -10) handicap = -1;
+  else if (strengthDiff < -5) handicap = -0.5;
+  
+  // Calculate win probabilities with handicap
+  const teamAWinProb = Math.round(50 + (strengthDiff * 0.8));
+  const teamBWinProb = Math.round(50 - (strengthDiff * 0.8));
+  
+  return {
+    handicap: handicap,
+    teamAWin: Math.min(85, Math.max(15, teamAWinProb)),
+    teamBWin: Math.min(85, Math.max(15, teamBWinProb))
+  };
+}
+
+function calculateScoreProbabilities(tA, tB) {
+  const scores = [
+    { score: "1-0", probability: 8 },
+    { score: "2-0", probability: 6 },
+    { score: "2-1", probability: 9 },
+    { score: "3-0", probability: 3 },
+    { score: "3-1", probability: 5 },
+    { score: "3-2", probability: 4 },
+    { score: "0-0", probability: 7 },
+    { score: "1-1", probability: 10 },
+    { score: "2-2", probability: 6 },
+    { score: "0-1", probability: 8 },
+    { score: "0-2", probability: 6 },
+    { score: "1-2", probability: 9 },
+    { score: "0-3", probability: 3 },
+    { score: "1-3", probability: 5 },
+    { score: "2-3", probability: 4 }
+  ];
+  
+  // Adjust based on team strengths
+  const strengthDiff = calculateTeamStrength(tA) - calculateTeamStrength(tB);
+  
+  return scores.map(score => {
+    let prob = score.probability;
+    
+    // Adjust probability based on which team is stronger
+    const [homeGoals, awayGoals] = score.score.split('-').map(Number);
+    if (homeGoals > awayGoals && strengthDiff > 0) {
+      prob += strengthDiff * 0.3;
+    } else if (awayGoals > homeGoals && strengthDiff < 0) {
+      prob += Math.abs(strengthDiff) * 0.3;
+    } else if (homeGoals === awayGoals && Math.abs(strengthDiff) < 10) {
+      prob += 5;
+    }
+    
+    return { ...score, probability: Math.min(15, Math.max(2, Math.round(prob))) };
+  }).sort((a, b) => b.probability - a.probability);
+}
+
+function calculateConfidence(probability) {
+  if (probability >= 70) return "high";
+  if (probability >= 50) return "medium";
+  return "low";
+}
+
+// ---------- Team Comparison ----------
+function compare() {
+  const teamA = document.getElementById("teamA").value;
+  const teamB = document.getElementById("teamB").value;
+  
+  if (!teamA || !teamB) {
+    alert("Please select two teams to compare.");
+    return;
+  }
+  
+  if (teamA === teamB) {
+    alert("Please select two different teams.");
+    return;
+  }
+  
+  const teams = window.teamStats;
+  if (!teams[teamA] || !teams[teamB]) {
+    alert("Selected team data not found. Please add more matches.");
+    return;
+  }
+  
+  const tA = teams[teamA];
+  const tB = teams[teamB];
+  
+  // Find head-to-head matches
+  const headToHead = matches.filter(m => 
+    (m.home === teamA && m.away === teamB) || 
+    (m.home === teamB && m.away === teamA)
+  );
+  
+  // Perform pattern analysis
+  const patterns = analyzePatterns(teamA, teamB, teams, headToHead);
+  
+  // Analyze markets
+  const markets = analyzeMarkets(teamA, teamB, teams, headToHead, patterns);
+  
+  let comparisonHTML = `<div class="comparison-result">
+    <h3>${teamA} vs ${teamB} - Complete Analysis</h3>
+    <p><strong>Head-to-Head Matches:</strong> ${headToHead.length}</p>`;
+  
+  if (headToHead.length > 0) {
+    let teamAWins = 0, teamBWins = 0, draws = 0;
+    let goalsA = 0, goalsB = 0;
+    
+    headToHead.forEach(match => {
+      if (match.home === teamA) {
+        goalsA += match.hg;
+        goalsB += match.ag;
+        if (match.hg > match.ag) teamAWins++;
+        else if (match.hg < match.ag) teamBWins++;
+        else draws++;
+      } else {
+        goalsA += match.ag;
+        goalsB += match.hg;
+        if (match.ag > match.hg) teamAWins++;
+        else if (match.ag < match.hg) teamBWins++;
+        else draws++;
+      }
+    });
+    
+    comparisonHTML += `
+      <p><strong>${teamA} Wins:</strong> ${teamAWins}</p>
+      <p><strong>${teamB} Wins:</strong> ${teamBWins}</p>
+      <p><strong>Draws:</strong> ${draws}</p>
+      <p><strong>Goals ${teamA}:</strong> ${goalsA}</p>
+      <p><strong>Goals ${teamB}:</strong> ${goalsB}</p>
+      <p><strong>Average Goals per Match:</strong> ${((goalsA+goalsB)/headToHead.length).toFixed(2)}</p>
+    `;
+  }
+  
+  // Add team stats comparison
+  comparisonHTML += `
+    <hr>
+    <h4>Team Statistics Comparison</h4>
+    <table>
+      <tr>
+        <th>Statistic</th>
+        <th>${teamA}</th>
+        <th>${teamB}</th>
+        <th>Edge</th>
+      </tr>
+      <tr>
+        <td>Win Rate</td>
+        <td>${Math.round((tA.records.wins / (tA.home.matches + tA.away.matches)) * 100)}%</td>
+        <td>${Math.round((tB.records.wins / (tB.home.matches + tB.away.matches)) * 100)}%</td>
+        <td>${Math.round((tA.records.wins / (tA.home.matches + tA.away.matches)) * 100) > Math.round((tB.records.wins / (tB.home.matches + tB.away.matches)) * 100) ? teamA : teamB}</td>
+      </tr>
+      <tr>
+        <td>Home Strength</td>
+        <td>${Math.round((tA.home.scored / Math.max(1, tA.home.matches)) * 10)}%</td>
+        <td>${Math.round((tB.home.scored / Math.max(1, tB.home.matches)) * 10)}%</td>
+        <td>${Math.round((tA.home.scored / Math.max(1, tA.home.matches)) * 10) > Math.round((tB.home.scored / Math.max(1, tB.home.matches)) * 10) ? teamA : teamB}</td>
+      </tr>
+      <tr>
+        <td>Away Strength</td>
+        <td>${Math.round((tA.away.scored / Math.max(1, tA.away.matches)) * 10)}%</td>
+        <td>${Math.round((tB.away.scored / Math.max(1, tB.away.matches)) * 10)}%</td>
+        <td>${Math.round((tA.away.scored / Math.max(1, tA.away.matches)) * 10) > Math.round((tB.away.scored / Math.max(1, tB.away.matches)) * 10) ? teamA : teamB}</td>
+      </tr>
+      <tr>
+        <td>GG Percentage</td>
+        <td>${Math.round(((tA.home.gg + tA.away.gg) / Math.max(1, tA.home.matches + tA.away.matches)) * 100)}%</td>
+        <td>${Math.round(((tB.home.gg + tB.away.gg) / Math.max(1, tB.home.matches + tB.away.matches)) * 100)}%</td>
+        <td>-</td>
+      </tr>
+      <tr>
+        <td>Over 2.5 %</td>
+        <td>${Math.round(((tA.home.ov25 + tA.away.ov25) / Math.max(1, tA.home.matches + tA.away.matches)) * 100)}%</td>
+        <td>${Math.round(((tB.home.ov25 + tB.away.ov25) / Math.max(1, tB.home.matches + tB.away.matches)) * 100)}%</td>
+        <td>-</td>
+      </tr>
+    </table>
+  `;
+  
+  // Add pattern analysis
+  comparisonHTML += `
+    <hr>
+    <h4>Pattern Analysis</h4>
+    <div class="market-grid">
+  `;
+  
+  patterns.forEach(pattern => {
+    comparisonHTML += `
+      <div class="market-card">
+        <div class="market-header">
+          <span class="market-title">${pattern.name}</span>
+          <span class="pattern-indicator ${getPatternClass(pattern)}">${getPatternVerdict(pattern)}</span>
+        </div>
+        <p><strong>${teamA}:</strong> ${pattern.teamA}${pattern.teamA > 50 ? '%' : ''}</p>
+        <p><strong>${teamB}:</strong> ${pattern.teamB}${pattern.teamB > 50 ? '%' : ''}</p>
+        <p><em>${pattern.verdict}</em></p>
+      </div>
+    `;
+  });
+  
+  comparisonHTML += `</div>`;
+  
+  // Add market analysis
+  comparisonHTML += `
+    <hr>
+    <h4>Market Analysis & Predictions</h4>
+    <div class="market-grid">
+  `;
+  
+  markets.forEach(market => {
+    comparisonHTML += `
+      <div class="market-card">
+        <div class="market-header">
+          <span class="market-title">${market.name}</span>
+        </div>
+    `;
+    
+    market.predictions.forEach(pred => {
+      const probClass = pred.confidence === "high" ? "" : pred.confidence === "medium" ? "medium" : "low";
+      comparisonHTML += `
+        <div style="margin: 8px 0;">
+          <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+            <span>${pred.market}</span>
+            <span class="market-probability ${probClass}">${pred.probability}%</span>
+          </div>
+          <div class="confidence-meter">
+            <div class="confidence-fill" style="width: ${pred.probability}%; background-color: ${getConfidenceColor(pred.confidence)};"></div>
+          </div>
+        </div>
+      `;
+    });
+    
+    comparisonHTML += `</div>`;
+  });
+  
+  comparisonHTML += `</div>`;
+  
+  // Add final verdict
+  const finalVerdict = generateFinalVerdict(teamA, teamB, markets, patterns);
+  comparisonHTML += `
+    <div class="prediction-verdict">
+      <div class="prediction-title">📊 FINAL VERDICT & RECOMMENDED BETS</div>
+      ${finalVerdict}
+    </div>
+  `;
+  
+  comparisonHTML += `</div>`;
+  document.getElementById("comparison").innerHTML = comparisonHTML;
+}
+
+function getPatternClass(pattern) {
+  if (pattern.name === "Recent Form") {
+    if (pattern.teamA > pattern.teamB + 15) return "pattern-positive";
+    if (pattern.teamB > pattern.teamA + 15) return "pattern-negative";
+    return "pattern-neutral";
+  }
+  return "pattern-neutral";
+}
+
+function getPatternVerdict(pattern) {
+  if (pattern.name === "Recent Form") {
+    if (pattern.teamA > pattern.teamB + 15) return "Strong Edge";
+    if (pattern.teamB > pattern.teamA + 15) return "Weak Edge";
+    return "Neutral";
+  }
+  return "Analyzed";
+}
+
+function getConfidenceColor(confidence) {
+  switch(confidence) {
+    case "high": return "#2ecc71";
+    case "medium": return "#f39c12";
+    case "low": return "#e74c3c";
+    default: return "#3498db";
+  }
+}
+
+function generateFinalVerdict(teamA, teamB, markets, patterns) {
+  // Find 1X2 market
+  const mainMarket = markets.find(m => m.name === "1X2 Market");
+  const goalMarket = markets.find(m => m.name === "Over/Under Markets");
+  const ggMarket = markets.find(m => m.name === "Both Teams to Score (GG)");
+  
+  let verdictHTML = `<p><strong>Match Outcome Prediction:</strong> `;
+  
+  if (mainMarket) {
+    const bestPrediction = mainMarket.predictions.reduce((best, current) => 
+      current.probability > best.probability ? current : best
+    );
+    verdictHTML += `<span style="color: #27ae60;">${bestPrediction.market} (${bestPrediction.probability}% probability)</span>`;
+  }
+  
+  verdictHTML += `</p><p><strong>Recommended Bets:</strong><ul>`;
+  
+  // Add recommended bets based on highest probabilities
+  const allPredictions = [];
+  markets.forEach(market => {
+    market.predictions.forEach(pred => {
+      if (pred.probability >= 60) {
+        allPredictions.push({ ...pred, marketName: market.name });
+      }
+    });
+  });
+  
+  // Sort by probability
+  allPredictions.sort((a, b) => b.probability - a.probability);
+  
+  // Take top 3 recommendations
+  const topRecommendations = allPredictions.slice(0, 3);
+  
+  if (topRecommendations.length > 0) {
+    topRecommendations.forEach(rec => {
+      verdictHTML += `<li><strong>${rec.marketName}:</strong> ${rec.market} (${rec.probability}% confidence)</li>`;
+    });
+  } else {
+    verdictHTML += `<li>No strong recommendations - consider avoiding this match</li>`;
+  }
+  
+  verdictHTML += `</ul></p>`;
+  
+  // Add pattern insights
+  verdictHTML += `<p><strong>Key Insights:</strong><ul>`;
+  
+  patterns.forEach(pattern => {
+    if (pattern.name === "Recent Form" && Math.abs(pattern.teamA - pattern.teamB) > 15) {
+      verdictHTML += `<li>${pattern.verdict}</li>`;
+    }
+    if (pattern.name === "Defensive Strength" && pattern.verdict.includes("better defense")) {
+      verdictHTML += `<li>${pattern.verdict}</li>`;
+    }
+  });
+  
+  if (ggMarket && ggMarket.predictions[0].probability >= 65) {
+    verdictHTML += `<li>High probability of Both Teams Scoring</li>`;
+  }
+  
+  if (goalMarket) {
+    const over25 = goalMarket.predictions.find(p => p.market === "Over 2.5 Goals");
+    if (over25 && over25.probability >= 60) {
+      verdictHTML += `<li>Expect goals - Over 2.5 looks promising</li>`;
+    }
+  }
+  
+  verdictHTML += `</ul></p>`;
+  
+  verdictHTML += `<p><em>Note: These are statistical predictions based on historical data. Always gamble responsibly.</em></p>`;
+  
+  return verdictHTML;
+}
+
+// ---------- Auto-Learn System ----------
+const learningKey="vf_learning_stats";
+function getLearning(){ 
+  return JSON.parse(localStorage.getItem(learningKey)) || {
+    matchTypes: {
+      "High Scoring": { played: 0, failed: 0 },
+      "Low Scoring": { played: 0, failed: 0 },
+      "GG Expected": { played: 0, failed: 0 },
+      "Clean Sheet Expected": { played: 0, failed: 0 }
+    },
+    markets: {
+      "Over 2.5": { played: 0, failed: 0 },
+      "Over 1.5": { played: 0, failed: 0 },
+      "Both Teams to Score": { played: 0, failed: 0 },
+      "Home Win": { played: 0, failed: 0 },
+      "Away Win": { played: 0, failed: 0 }
+    }
+  }; 
+}
+
+function saveLearning(data){ 
+  localStorage.setItem(learningKey, JSON.stringify(data)); 
+}
+
+function updateLearningStats() {
+  const data = getLearning();
+  let html = `<h4>Match Type Success Rates</h4>
+              <div class="table-container">
+                <table>
+                  <tr>
+                    <th>Match Type</th>
+                    <th>Analyzed</th>
+                    <th>Failed</th>
+                    <th>Success Rate</th>
+                  </tr>`;
+  
+  Object.keys(data.matchTypes).forEach(type => {
+    const t = data.matchTypes[type];
+    const successRate = t.played > 0 ? Math.round((1 - t.failed / t.played) * 100) : 0;
+    html += `<tr>
+              <td>${type}</td>
+              <td>${t.played}</td>
+              <td>${t.failed}</td>
+              <td><span style="color: ${successRate >= 70 ? '#27ae60' : successRate >= 50 ? '#f39c12' : '#e74c3c'}">
+                ${successRate}%
+              </span></td>
+            </tr>`;
+  });
+  
+  html += `</table></div><br>
+           <h4>Market Success Rates</h4>
+           <div class="table-container">
+             <table>
+               <tr>
+                 <th>Market</th>
+                 <th>Analyzed</th>
+                 <th>Failed</th>
+                 <th>Success Rate</th>
+               </tr>`;
+  
+  Object.keys(data.markets).forEach(market => {
+    const m = data.markets[market];
+    const successRate = m.played > 0 ? Math.round((1 - m.failed / m.played) * 100) : 0;
+    html += `<tr>
+              <td>${market}</td>
+              <td>${m.played}</td>
+              <td>${m.failed}</td>
+              <td><span style="color: ${successRate >= 70 ? '#27ae60' : successRate >= 50 ? '#f39c12' : '#e74c3c'}">
+                ${successRate}%
+              </span></td>
+            </tr>`;
+  });
+  
+  html += "</table></div>";
+  document.getElementById("learningStats").innerHTML = html;
+}
+
+// ---------- Data Import/Export ----------
+function exportData() {
+  const data = {
+    matches: matches,
+    learningStats: getLearning(),
+    exportDate: new Date().toISOString()
+  };
+  
+  const dataStr = JSON.stringify(data, null, 2);
+  const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+  
+  const exportFileDefaultName = `virtual-football-data-${new Date().toISOString().split('T')[0]}.json`;
+  
+  const linkElement = document.createElement('a');
+  linkElement.setAttribute('href', dataUri);
+  linkElement.setAttribute('download', exportFileDefaultName);
+  linkElement.click();
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  
+  input.onchange = function(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = function(e) {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        
+        if (!importedData.matches || !Array.isArray(importedData.matches)) {
+          throw new Error("Invalid data format");
+        }
+        
+        if (confirm(`Import ${importedData.matches.length} matches and learning data? This will replace current data.`)) {
+          matches = importedData.matches;
+          localStorage.setItem("matches", JSON.stringify(matches));
+          
+          if (importedData.learningStats) {
+            localStorage.setItem(learningKey, JSON.stringify(importedData.learningStats));
+          }
+          
+          updateCount(); 
+          updateStats(); 
+          updateTeams(); 
+          updateTeamTable(); 
+          updateLearningStats();
+          
+          alert(`Successfully imported ${matches.length} matches!`);
+        }
+      } catch (error) {
+        alert("Error importing data: " + error.message);
+      }
+    };
+    
+    reader.readAsText(file);
+  };
+  
+  input.click();
+}
+</script>
+</body>
+</html>
