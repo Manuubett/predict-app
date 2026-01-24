@@ -240,6 +240,52 @@
       background-color: #dfe6e9;
       margin: 30px 0;
     }
+    
+    .app-header {
+  background: #111;
+  padding: 10px 0;
+}
+
+.app-scroll {
+  display: flex;
+  gap: 16px;
+  padding: 0 12px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.app-item {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #1c1c1c;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 20px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+.app-item i {
+  font-size: 16px;
+  color: #00e676;
+}
+
+.nav-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.app-item:hover {
+  background: #2a2a2a;
+}
   </style>
 </head>
 <body>
@@ -265,6 +311,43 @@
       >
     </a>
   </p>
+  <header class="app-header">
+  <div class="app-scroll">
+
+    <!-- Odi League -->
+    <a href="https://odibets.com/league" class="app-item">
+      <img src="https://odibets.com/favicon.ico" alt="Odi League" class="nav-icon">
+      <span>Odi League</span>
+    </a>
+
+    <!-- Multi Bet -->
+    <a href="#" class="app-item">
+      <i class="fa-solid fa-layer-group"></i>
+      <span>Multi Bet</span>
+    </a>
+
+    <!-- Aviator -->
+    <a href="#" class="app-item">
+      <i class="fa-solid fa-plane-departure"></i>
+      <span>Aviator</span>
+    </a>
+
+    <!-- Pro -->
+    <a href="#" class="app-item">
+      <i class="fa-solid fa-user-shield"></i>
+      <span>Pro</span>
+    </a>
+
+    <!-- Jackpot -->
+    <a href="#" class="app-item">
+      <i class="fa-solid fa-ticket"></i>
+      <span>Jackpot</span>
+    </a>
+
+  </div>
+</header>
+  
+  
 <script>
   atOptions = {
     'key' : 'b8933113d65f10d913689af948a8ff21',
